@@ -5,9 +5,9 @@ import { router } from 'expo-router';
 
 const ProfileScreen = () => {
   return (
-    <ScrollView className="flex-1 bg-orange-50 pt-24">
+    <ScrollView className="flex-1 bg-blue-50 pt-24">
       <View className="justify-center items-center px-8">
-        <Ionicons name="person-circle-outline" size={100} color="#FF6600" className="flex justify-center items-center mb-8" />
+        <Ionicons name="person-circle-outline" size={100} color="dodgerblue" className="flex justify-center items-center mb-8" />
 
         <TextInput
           className="bg-gray-200 rounded-xl w-full py-4 px-4 mb-4 font-semibold"
@@ -30,7 +30,7 @@ const ProfileScreen = () => {
           placeholderTextColor="#999"
         />
 
-        <TouchableOpacity className="bg-orange-500 w-full rounded-xl py-4 mb-4">
+        <TouchableOpacity className="bg-blue-500 w-full rounded-xl py-4 mb-4">
           <Text className="text-white text-center font-pbold">Update</Text>
         </TouchableOpacity>
 

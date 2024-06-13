@@ -23,7 +23,7 @@ export default function TabsLayout() {
       initialRouteName="dashboard"
       screenOptions={{
         tabBarStyle: {
-          backgroundColor: "darkorange", 
+          backgroundColor: "#2a52be", 
           paddingTop: 5, 
           height: 70,
           
@@ -31,7 +31,7 @@ export default function TabsLayout() {
           borderTopLeftRadius: 15, 
           borderTopRightRadius: 15, 
           ...Platform.OS === "ios" ? {
-            backgroundColor: "darkorange", 
+            backgroundColor: "#2a52be", 
             paddingTop: 5, 
             height: 90,
             
@@ -42,7 +42,7 @@ export default function TabsLayout() {
         },
         headerShown: false,
         tabBarActiveTintColor: "white",
-        tabBarInactiveTintColor: "#F3E5AB",
+        tabBarInactiveTintColor: "lightgray",
       }}
       tabBar={(props) =>
         Platform.OS === "ios" ? (
@@ -59,9 +59,9 @@ export default function TabsLayout() {
     >
 
 <Tabs.Screen
-        name="home"
+        name="dashboard"
         options={{
-          href: "/home",
+          href: "/dashboard",
           
           tabBarIcon: ({ color }) => (
             <View
@@ -81,9 +81,9 @@ export default function TabsLayout() {
       />
 
       <Tabs.Screen
-        name="explore"
+        name="search"
         options={{
-          href: "/explore",
+          href: "/search",
           
           tabBarIcon: ({ color }) => (
             <View
@@ -103,9 +103,9 @@ export default function TabsLayout() {
       />
      
      <Tabs.Screen
-        name="sessions"
+        name="requests"
         options={{
-          href: "/sessions",
+          href: "/requests",
          
           tabBarIcon: ({ color }) => (
             <View
@@ -127,10 +127,10 @@ export default function TabsLayout() {
      
 
       <Tabs.Screen
-        name="notifications"
+        name="messages"
         options={{
           href: {
-            pathname: "/notifications",
+            pathname: "/messages",
           },
           tabBarIcon: ({ color }) => (
             <View
@@ -149,10 +149,10 @@ export default function TabsLayout() {
       />
 
 <Tabs.Screen
-        name="profile"
+        name="settings"
         options={{
           href: {
-            pathname: "/profile",
+            pathname: "/settings",
           },
           tabBarIcon: ({ color }) => (
             <View
@@ -163,7 +163,7 @@ export default function TabsLayout() {
                 backgroundColor: "transparent",
               }}
             >
-             <Ionicons name="person" size={24} color={color} />
+             <Ionicons name="settings" size={24} color={color} />
              
             </View>
           ),
@@ -206,6 +206,6 @@ function TabBarIcon(props:any) {
     //   style={{ marginBottom: -3 }}
     //   {...props}
     // />
-    <Ionicons name="home" size={props.size || 26} color="black" style={{ marginBottom: -3 }} {...props}/>
+    <Ionicons name="dashboard" size={props.size || 26} color="black" style={{ marginBottom: -3 }} {...props}/>
   );
 }

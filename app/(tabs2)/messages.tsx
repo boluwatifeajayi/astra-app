@@ -36,12 +36,12 @@ const NotificationsScreen = () => {
   };
 
   return (
-    <View className="flex-1 bg-orange-50 pt-16">
+    <View className="flex-1 bg-blue-50 pt-16">
       <Text className="text-2xl font-pbold text-gray-800 mt-4 px-4 mb-2">Messages & Notifications</Text>
       <View className="flex flex-row px-4 py-2">
         <Text
           className={`flex-1 py-2 text-left font-pbold ${
-            activeTab === 'messages' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-gray-500'
+            activeTab === 'messages' ? 'text-blue-500 border-b-2 border-blue-500' : 'text-gray-500'
           }`}
           onPress={() => setActiveTab('messages')}
         >
@@ -49,7 +49,7 @@ const NotificationsScreen = () => {
         </Text>
         <Text
           className={`flex-1 py-2 text-right font-pbold ${
-            activeTab === 'notifications' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-gray-500'
+            activeTab === 'notifications' ? 'text-blue-500 border-b-2 border-blue-500' : 'text-gray-500'
           }`}
           onPress={() => setActiveTab('notifications')}
         >

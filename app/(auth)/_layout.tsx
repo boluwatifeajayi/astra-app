@@ -33,6 +33,13 @@ const AuthLayout = () => {
             headerShown: false,
           }}
         />          
+
+        <Stack.Screen
+          name="tutor-register"
+          options={{
+            headerShown: false,
+          }}
+        />          
       
       </Stack>
 

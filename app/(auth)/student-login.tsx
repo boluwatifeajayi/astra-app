@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 
 const StudentLogin = () => {
   const [email, setEmail] = useState('');
@@ -15,8 +16,11 @@ const StudentLogin = () => {
     <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="flex-1 px-5 bg-white">
       <View className="items-center justify-center flex-1">
         {/* Top-left arrow button */}
-        <TouchableOpacity className="absolute top-5 left-5 mt-14">
-          <Text className="text-gray-600 text-xl">&#8592;</Text>
+        <TouchableOpacity
+          className="absolute top-4 left-1 bg-gray-200 rounded-full p-3 mt-16 mb-3 z-10"
+          onPress={() => router.push("/")}
+        >
+          <Ionicons name="arrow-back" size={24} color="#333" />
         </TouchableOpacity>
 
         <Image source={require('../../assets/images/logo.png')} className="w-32 h-32 mb-0" />
@@ -30,6 +34,7 @@ const StudentLogin = () => {
             placeholder="Enter your email"
             value={email}
             onChangeText={setEmail}
+            placeholderTextColor="#999"
           />
         </View>
 
@@ -41,6 +46,7 @@ const StudentLogin = () => {
             value={password}
             onChangeText={setPassword}
             secureTextEntry={!showPassword}
+            placeholderTextColor="#999"
           />
           <TouchableOpacity
             className="absolute right-4 top-9"

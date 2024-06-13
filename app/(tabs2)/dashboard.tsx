@@ -36,17 +36,17 @@ const Explore = () => {
     { label: 'English', bgColor: 'bg-green-500' },
     { label: 'Computer Science', bgColor: 'bg-yellow-500' },
     { label: 'Physics', bgColor: 'bg-purple-500' },
-    { label: 'Chemistry', bgColor: 'bg-orange-500' },
+    { label: 'Chemistry', bgColor: 'bg-blue-500' },
   ];
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="flex-1 bg-orange-50">
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="flex-1 bg-blue-50">
       <View className="px-5 pt-16">
         <View className="flex-row justify-between items-center mb-4">
           <View>
             <Text className="text-gray-400 font-psemibold">Good Morning</Text>
-            <Text className="text-2xl font-pbold text-gray-800">Boluwatife</Text>
-            <Text className=" font-psemibold text-orange-600">Student</Text>
+            <Text className="text-2xl font-pbold text-gray-800">Taiwo Olakemi</Text>
+            <Text className=" font-psemibold text-blue-600">Tutor</Text>
           </View>
           <View className="flex-row gap-1">
             <Ionicons name="notifications-outline" size={26} color="gray" className="mr-4" />
@@ -57,12 +57,12 @@ const Explore = () => {
         <View className="mb-6">
           <TextInput
             className="px-4 py-4 bg-white rounded-xl placeholder-gray-500"
-            placeholder="Search tutors"
+            placeholder="Search students"
             placeholderTextColor="#999"
           />
         </View>
 
-        <Text className="text-xl font-pbold text-gray-800 mb-2">Top Matched Tutors</Text>
+        <Text className="text-xl font-pbold text-gray-800 mb-2">Top Matched Students</Text>
 
         <View className="flex-row flex-wrap  justify-between mb-8">
           {tutors.map((tutor, index) => (
@@ -72,8 +72,8 @@ const Explore = () => {
               <Text className="text-gray-600 font-psemibold mb-4">
                 {tutor.teachingStyles.join(', ')}
               </Text>
-              <TouchableOpacity onPress={() => router.push("/innerscreens/tutor-details")} className="py-2 px-4 bg-white rounded-xl">
-                <Text className=" text-orange-600 font-pbold">Learn More</Text>
+              <TouchableOpacity onPress={() => router.push("/innerscreens/student-details")} className="py-2 px-4 bg-white rounded-xl">
+                <Text className=" text-blue-600 font-pbold">Learn More</Text>
               </TouchableOpacity>
             </View>
           ))}

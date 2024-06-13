@@ -36,9 +36,9 @@ const Explore = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="flex-1 bg-orange-50 px-5 pt-16">
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="flex-1 bg-blue-50 px-5 pt-16">
       <View className="mb-6">
-        <Text className="text-2xl font-pbold text-gray-800 mt-4 mb-2">Search Courses, Tutors, and learning styles</Text>
+        <Text className="text-2xl font-pbold text-gray-800 mt-4 mb-2">Search Courses, Students, and learning styles</Text>
         <View className="flex-row items-center mt-3 bg-gray-200 rounded-xl px-4 py-2">
           <TextInput
             className="flex-1 text-gray-600"
@@ -69,7 +69,7 @@ const Explore = () => {
                     Courses: {tutor.courses.join(', ')}
                   </Text>
                 </View>
-                <TouchableOpacity className="py-2 px-4 bg-orange-500 rounded-xl">
+                <TouchableOpacity className="py-2 px-4 bg-blue-500 rounded-xl">
                   <Text className="text-white font-pbold">Learn More</Text>
                 </TouchableOpacity>
               </View>
