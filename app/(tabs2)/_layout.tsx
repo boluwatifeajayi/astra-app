@@ -80,7 +80,7 @@ export default function TabsLayout() {
         }}
       />
 
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="search"
         options={{
           href: "/search",
@@ -100,7 +100,7 @@ export default function TabsLayout() {
             </View>
           ),
         }}
-      />
+      /> */}
      
      <Tabs.Screen
         name="requests"

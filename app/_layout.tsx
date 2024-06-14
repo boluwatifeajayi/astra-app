@@ -43,7 +43,7 @@ const RootLayout = () => {
         <Stack.Screen name="(tabs2)" options={{ headerShown: false }} />
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="innerscreens/tutorDetail/[id]" options={{ headerShown: false }} />
-        <Stack.Screen name="innerscreens/student-details" options={{ headerShown: false }} />
+        <Stack.Screen name="innerscreens/studentDetail/[id]" options={{ headerShown: false }} />
       </Stack>
     </PaperProvider>
    

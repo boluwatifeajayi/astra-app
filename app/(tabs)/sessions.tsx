@@ -73,7 +73,7 @@ const SessionsScreen = () => {
       <Text className="text-gray-500 font-semibold mb-2">Meeting Type:</Text>
       <Text className="mb-4">{session.meetingType || <Text className="text-red-500">Awaiting tutor's approval</Text>}</Text>
       <Text className="text-gray-500 font-semibold mb-2">Location:</Text>
-      <Text className="mb-4">{session.meetingLink || <Text className="text-red-500">Awaiting tutor's approval</Text>}</Text>
+      <Text className="mb-4">{session.location || <Text className="text-red-500">Awaiting tutor's approval</Text>}</Text>
       <Text className="text-gray-500 font-semibold mb-2">Tutor Name:</Text>
       <Text className="mb-4">{`${session.tutor.firstName} ${session.tutor.lastName}`}</Text>
       <Text className="text-gray-500 font-semibold mb-2">Time:</Text>

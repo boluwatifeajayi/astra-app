@@ -7,10 +7,13 @@ import axios from 'axios';
 import { server } from '@/server';
 
 const Explore = () => {
-
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [matchedStudents, setMatchedStudents] = useState<any[]>([]);
+  const [skills, setSkills] = useState<string[]>([]);
+  const [dataLoading, setDataLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchUserData = async () => {
     const token = await AsyncStorage.getItem('tutorToken');
@@ -35,14 +38,46 @@ const Explore = () => {
     }
   };
 
+  const fetchMatchedStudents = async () => {
+    try {
+      const token = await AsyncStorage.getItem('tutorToken');
+      const response = await axios.get(`${server}/tutors/matched-students`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setMatchedStudents(response.data);
+    } catch (error) {
+      console.error('Error fetching matched students:', error);
+      setError('Failed to load matched students.');
+    } finally {
+      setDataLoading(false);
+    }
+  };
+
+  const fetchSkills = async () => {
+    try {
+      const response = await axios.get(`${server}/skills`);
+      setSkills(response.data.slice(0, 7));
+    } catch (error) {
+      console.error('Error fetching skills:', error);
+      setError('Failed to load skills.');
+    } finally {
+      setDataLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchUserData();
+    fetchMatchedStudents();
+    fetchSkills();
   }, []);
-
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     fetchUserData();
+    fetchMatchedStudents();
+    fetchSkills();
   }, []);
 
   const getGreeting = () => {
@@ -60,43 +95,21 @@ const Explore = () => {
     );
   }
 
+  if (dataLoading) {
+    return (
+      <View className="flex-1 justify-center items-center bg-orange-50">
+        <ActivityIndicator size="large" color="dodgerblue" />
+      </View>
+    );
+  }
 
-
-
-  const tutors = [
-    {
-      name: 'John Doe',
-      qualification: 'Ph.D. in Mathematics',
-      teachingStyles: ['Visual', 'Auditory'],
-      bgColor: 'bg-blue-200',
-    },
-    {
-      name: 'Jane Smith',
-      qualification: 'Master in English Lit',
-      teachingStyles: ['Writing', 'Kinesthetic'],
-      bgColor: 'bg-green-200',
-    },
-    {
-      name: 'Michael Johnson',
-      qualification: 'Bachelor in Computer Science',
-      teachingStyles: ['Visual', 'Kinesthetic'],
-      bgColor: 'bg-yellow-200',
-    },
-    {
-      name: 'Emily Davis',
-      qualification: 'Ph.D. in Physics',
-      teachingStyles: ['Auditory', 'Reading/Writing'],
-      bgColor: 'bg-purple-200',
-    },
-  ];
-
-  const trendingSkills = [
-    { label: 'Mathematics', bgColor: 'bg-blue-500' },
-    { label: 'English', bgColor: 'bg-green-500' },
-    { label: 'Computer Science', bgColor: 'bg-yellow-500' },
-    { label: 'Physics', bgColor: 'bg-purple-500' },
-    { label: 'Chemistry', bgColor: 'bg-blue-500' },
-  ];
+  if (error) {
+    return (
+      <View className="flex-1 justify-center items-center bg-orange-50">
+        <Text className="text-red-500">{error}</Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView
@@ -109,7 +122,7 @@ const Explore = () => {
       <View className="px-5 pt-16">
         <View className="flex-row justify-between items-center mb-4">
           <View>
-          <Text className="text-gray-400 font-psemibold">{getGreeting()}</Text>
+            <Text className="text-gray-400 font-psemibold">{getGreeting()}</Text>
             <Text className="text-2xl font-pbold text-gray-800">{user?.firstName} {user?.lastName}</Text>
             <Text className=" font-psemibold text-blue-600">{user?.role}</Text>
           </View>
@@ -129,16 +142,16 @@ const Explore = () => {
 
         <Text className="text-xl font-pbold text-gray-800 mb-2">Top Matched Students</Text>
 
-        <View className="flex-row flex-wrap  justify-between mb-8">
-          {tutors.map((tutor, index) => (
-            <View key={index} className={`w-[49%] p-4 mt-2  rounded-xl ${tutor.bgColor}`}>
-              <Text className="text-md font-pbold text-gray-800 mb-2">{tutor.name}</Text>
-              <Text className="text-gray-600 font-psemibold mb-2">{tutor.qualification}</Text>
+        <View className="flex-row flex-wrap justify-between mb-8">
+          {matchedStudents.map((student, index) => (
+            <View key={index} className={`w-[49%] p-4 mt-2 rounded-xl bg-${index % 4 === 0 ? 'blue' : index % 4 === 1 ? 'green' : index % 4 === 2 ? 'yellow' : 'purple'}-200`}>
+              <Text className="text-md font-pbold text-gray-800 mb-2">{student.firstName} {student.lastName}</Text>
+              <Text className="text-gray-600 font-psemibold mb-2">{student.discipline}</Text>
               <Text className="text-gray-600 font-psemibold mb-4">
-                {tutor.teachingStyles.join(', ')}
+                {student.learningStyle?.join(', ')}
               </Text>
-              <TouchableOpacity onPress={() => router.push("/innerscreens/student-details")} className="py-2 px-4 bg-white rounded-xl">
-                <Text className=" text-blue-600 font-pbold">Learn More</Text>
+              <TouchableOpacity onPress={() => router.push(`/innerscreens/studentDetail/${student._id}`)} className="py-2 px-4 bg-white rounded-xl">
+                <Text className="text-blue-600 font-pbold">Learn More</Text>
               </TouchableOpacity>
             </View>
           ))}
@@ -147,12 +160,12 @@ const Explore = () => {
         <Text className="text-xl font-pbold text-gray-800 mb-4">Trending Skills</Text>
 
         <View>
-          {trendingSkills.map((skill, index) => (
+          {skills.map((skill, index) => (
             <TouchableOpacity
               key={index}
-              className={`flex-row items-center justify-between py-4 px-5 mb-4 rounded-xl ${skill.bgColor}`}
+              className={`flex-row items-center justify-between py-4 px-5 mb-4 rounded-xl bg-${index % 4 === 0 ? 'blue' : index % 4 === 1 ? 'green' : index % 4 === 2 ? 'yellow' : 'purple'}-500`}
             >
-              <Text className="text-white font-pbold">{skill.label}</Text>
+              <Text className="text-white font-pbold">{skill}</Text>
               <Ionicons name="chevron-forward" size={24} color="white" />
             </TouchableOpacity>
           ))}
