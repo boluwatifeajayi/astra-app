@@ -1,9 +1,68 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, ActivityIndicator, RefreshControl } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { server } from '@/server';
 
 const Explore = () => {
+
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchUserData = async () => {
+    const token = await AsyncStorage.getItem('tutorToken');
+    if (!token) {
+      router.push('/');
+      return;
+    }
+
+    try {
+      const response = await axios.get(`${server}/tutors/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setUser(response.data);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      router.push('/');
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchUserData();
+  }, []);
+
+  const getGreeting = () => {
+    const currentHour = new Date().getHours();
+    if (currentHour < 12) return 'Good Morning';
+    if (currentHour < 18) return 'Good Afternoon';
+    return 'Good Evening';
+  };
+
+  if (loading) {
+    return (
+      <View className="flex-1 justify-center items-center bg-orange-50">
+        <ActivityIndicator size="large" color="dodgerblue" />
+      </View>
+    );
+  }
+
+
+
+
   const tutors = [
     {
       name: 'John Doe',
@@ -40,13 +99,19 @@ const Explore = () => {
   ];
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="flex-1 bg-blue-50">
+    <ScrollView
+      contentContainerStyle={{ flexGrow: 1 }}
+      className="flex-1 bg-blue-50"
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['dodgerblue']} />
+      }
+    >
       <View className="px-5 pt-16">
         <View className="flex-row justify-between items-center mb-4">
           <View>
-            <Text className="text-gray-400 font-psemibold">Good Morning</Text>
-            <Text className="text-2xl font-pbold text-gray-800">Taiwo Olakemi</Text>
-            <Text className=" font-psemibold text-blue-600">Tutor</Text>
+          <Text className="text-gray-400 font-psemibold">{getGreeting()}</Text>
+            <Text className="text-2xl font-pbold text-gray-800">{user?.firstName} {user?.lastName}</Text>
+            <Text className=" font-psemibold text-blue-600">{user?.role}</Text>
           </View>
           <View className="flex-row gap-1">
             <Ionicons name="notifications-outline" size={26} color="gray" className="mr-4" />
