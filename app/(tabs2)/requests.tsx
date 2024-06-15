@@ -3,8 +3,8 @@ import { View, Text, ScrollView, TouchableOpacity, Modal, Pressable, TextInput, 
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import { server } from '@/server'; // adjust the import according to your project structure
-import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ModalDropdown from 'react-native-modal-dropdown';
 
 interface Session {
   _id: string;
@@ -264,13 +264,14 @@ const SessionsScreen = () => {
             
             <Text className="text-gray-500 font-semibold mb-2">Meeting Type:</Text>
             <View className="border border-gray-300 rounded-lg mb-4">
-              <Picker
-                selectedValue={meetingType}
-                onValueChange={(itemValue) => setMeetingType(itemValue)}
-              >
-                <Picker.Item label="Online" value="online" />
-                <Picker.Item label="In-person" value="in-person" />
-              </Picker>
+              <ModalDropdown
+                options={['online', 'in-person']}
+                defaultValue={meetingType}
+                onSelect={(index, value) => setMeetingType(value as 'online' | 'in-person' | 'online')}
+                style={{ padding: 10 }}
+                textStyle={{ fontSize: 16 }}
+                dropdownStyle={{ width: 200, padding: 10 }}
+              />
             </View>
             <Text className="text-gray-500 font-semibold mb-2">Duration (minutes):</Text>
             <TextInput

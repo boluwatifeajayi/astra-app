@@ -10,22 +10,23 @@ import { Picker } from '@react-native-picker/picker';
 
 const TutorDetails = () => {
   const [tutor, setTutor] = useState<any>(null);
-  const [loading, setLoading] = useState<any>(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<any>(null);
-  const [modalVisible, setModalVisible] = useState<any>(false);
-  const [courseName, setCourseName] = useState<any>('');
-  const [selectedCourse, setSelectedCourse] = useState<string>('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [courseName, setCourseName] = useState('');
+  const [selectedCourse, setSelectedCourse] = useState('');
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(new Date());
-  const [time, setTime] = useState<any>('');
-  const [reviewModalVisible, setReviewModalVisible] = useState<any>(false);
-  const [newReview, setNewReview] = useState<any>('');
-  const [newRating, setNewRating] = useState<any>(0);
+  const [time, setTime] = useState('');
+  const [reviewModalVisible, setReviewModalVisible] = useState(false);
+  const [newReview, setNewReview] = useState('');
+  const [newRating, setNewRating] = useState(0);
+  const [messageModalVisible, setMessageModalVisible] = useState(false); // New state for message modal
+  const [message, setMessage] = useState(''); // New state for message content
   const { id } = useLocalSearchParams<{ id: string }>();
-  const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday',];
+  const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-
-useEffect(() => {
+  useEffect(() => {
     fetchTutorData();
   }, [id]);
 
@@ -45,8 +46,6 @@ useEffect(() => {
       setLoading(false);
     }
   };
-
-  
 
   const handleSubmitBooking = async () => {
     if (!selectedCourse) {
@@ -88,8 +87,36 @@ useEffect(() => {
   };
 
   const handleSendMessage = () => {
-    // Implement send message logic here
-    console.log("Send message clicked");
+    setMessageModalVisible(true);
+  };
+
+  const handleCloseMessageModal = () => {
+    setMessageModalVisible(false);
+    setMessage('');
+  };
+
+  const handleSubmitMessage = async () => {
+    if (!message.trim()) {
+      Alert.alert('Error', 'Please enter a message.');
+      return;
+    }
+
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      await axios.post(`${server}/messages/send`, {
+        recipientId: id,
+        content: message,
+      }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      Alert.alert('Success', 'Your message has been sent successfully.');
+      handleCloseMessageModal();
+      router.push('/notifications');
+    } catch (error) {
+      console.error('Error sending message:', error);
+      Alert.alert('Error', 'Failed to send message. Please try again.');
+    }
   };
 
   const handleAddReview = () => {
@@ -155,7 +182,7 @@ useEffect(() => {
 
   return (
     <View className="flex-1 bg-orange-50 pt-12">
-       <ScrollView className="px-4 py-6">
+      <ScrollView className="px-4 py-6">
         <TouchableOpacity
           className="absolute top-4 left-1 bg-gray-200 rounded-full p-3 mb-3 z-10"
           onPress={() => router.push("/home")}
@@ -163,7 +190,7 @@ useEffect(() => {
           <Ionicons name="arrow-back" size={24} color="#333" />
         </TouchableOpacity>
 
-        <Text className="text-4xl font-pbold mb-4 pt-20">{tutor.firstName} {tutor.lastName}</Text>
+        <Text className="text-4xl font-pbold mb-4 pt-20">{tutor?.firstName} {tutor?.lastName}</Text>
 
         <Text className="text-lg font-pbold mb-2">Qualifications:</Text>
         <Text className="font-pregular mb-8">{tutor.qualifications}</Text>
@@ -209,81 +236,79 @@ useEffect(() => {
             <Text className="text-orange-600 font-pbold">Add Review</Text>
           </TouchableOpacity>
         </View>
-       
-        {tutor?.reviews.length === 0 ? (
-            <View className='my-10'>
-                <Text className='text-center font-pbold text-gray-500'>No Reviews for this tutor Yet</Text>
-            </View>
-) : (
-  tutor.reviews.map((review: any, index: any) => (
-    <View key={index} className="bg-white rounded-lg p-4 mb-4">
-      <Text className="font-pbold mb-2">{review.studentFirstName} {review.studentLastName}</Text>
-      <View className="flex-row mb-2">
-        {renderStars(review.rating)}
-      </View>
-      <Text className="font-pregular">{review.comment}</Text>
-    </View>
-  ))
-)}
 
+        {tutor?.reviews.length === 0 ? (
+          <View className='my-10'>
+            <Text className='text-center font-pbold text-gray-500'>No Reviews for this tutor Yet</Text>
+          </View>
+        ) : (
+          tutor.reviews.map((review:any, index:any) => (
+            <View key={index} className="bg-white rounded-lg p-4 mb-4">
+              <Text className="font-pbold mb-2">{review.studentFirstName} {review.studentLastName}</Text>
+              <View className="flex-row mb-2">
+                {renderStars(review.rating)}
+              </View>
+              <Text className="font-pregular">{review.comment}</Text>
+            </View>
+          ))
+        )}
       </ScrollView>
 
-
+      {/* Booking Modal */}
       <Modal
-      animationType="slide"
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={handleCloseModal}
-    >
-      <View className="flex-1 justify-center items-center bg-[#80808080] bg-opacity-50">
-        <View className="bg-white rounded-lg p-6 w-11/12">
-          <View className="flex-row justify-between items-center mb-4">
-            <Text className="text-lg font-pbold">Book Session</Text>
-            <TouchableOpacity onPress={handleCloseModal}>
-              <Ionicons name="close-circle-outline" size={24} color="#333" />
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={handleCloseModal}
+      >
+        <View className="flex-1 justify-center items-center bg-[#80808080] bg-opacity-50">
+          <View className="bg-white rounded-lg p-6 w-11/12">
+            <View className="flex-row justify-between items-center mb-4">
+              <Text className="text-lg font-pbold">Book Session</Text>
+              <TouchableOpacity onPress={handleCloseModal}>
+                <Ionicons name="close-circle-outline" size={24} color="#333" />
+              </TouchableOpacity>
+            </View>
+
+            <Text className="font-semibold mb-2">Course:</Text>
+            <Picker
+              selectedValue={selectedCourse}
+              onValueChange={(itemValue) => setSelectedCourse(itemValue)}
+              className="bg-gray-200 rounded-xl mb-4"
+            >
+              {tutor?.courses.map((course:any, index:any) => (
+                <Picker.Item key={index} label={course} value={course} />
+              ))}
+            </Picker>
+
+            <Text className="font-semibold mb-2">Date:</Text>
+            <DateTimePicker
+              value={selectedDate}
+              mode="date"
+              display="default"
+              onChange={(event, selectedDate) => setSelectedDate(selectedDate || new Date())}
+            />
+
+            <Text className="font-semibold mb-2 mt-4">Time:</Text>
+            <DateTimePicker
+              value={selectedTime}
+              mode="time"
+              is24Hour={true}
+              display="default"
+              onChange={(event, selectedTime) => setSelectedTime(selectedTime || new Date())}
+            />
+
+            <TouchableOpacity
+              className="bg-orange-500 rounded-xl py-4 mt-6"
+              onPress={handleSubmitBooking}
+            >
+              <Text className="text-white text-center font-pbold">Book Session</Text>
             </TouchableOpacity>
           </View>
-          
-          <Text className="font-semibold mb-2">Course:</Text>
-          <Picker
-            selectedValue={selectedCourse}
-            onValueChange={(itemValue) => setSelectedCourse(itemValue)}
-            className="bg-gray-200 rounded-xl mb-4"
-          >
-            {tutor?.courses.map((course: string, index: number) => (
-              <Picker.Item key={index} label={course} value={course} />
-            ))}
-          </Picker>
-          
-          <Text className="font-semibold mb-2">Date:</Text>
-          <DateTimePicker
-            value={selectedDate}
-            mode="date"
-            display="default"
-            onChange={(event, selectedDate) => setSelectedDate(selectedDate || new Date())}
-          />
-          
-          <Text className="font-semibold mb-2 mt-4">Time:</Text>
-          <DateTimePicker
-            value={selectedTime}
-            mode="time"
-            is24Hour={true}
-            display="default"
-            onChange={(event, selectedTime) => setSelectedTime(selectedTime || new Date())}
-          />
-          
-          <TouchableOpacity
-            className="bg-orange-500 rounded-xl py-4 mt-6"
-            onPress={handleSubmitBooking}
-          >
-            <Text className="text-white text-center font-pbold">Book Session</Text>
-          </TouchableOpacity>
         </View>
-      </View>
-    </Modal>
+      </Modal>
 
-
-
+      {/* Review Modal */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -304,7 +329,6 @@ useEffect(() => {
               placeholder="Enter your review"
               value={newReview}
               onChangeText={setNewReview}
-             
             />
             <Text className="font-semibold mb-2">Rating:</Text>
             <View className="flex-row mb-4">
@@ -323,6 +347,39 @@ useEffect(() => {
               onPress={handleSubmitReview}
             >
               <Text className="text-white text-center font-pbold">Submit Review</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Message Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={messageModalVisible}
+        onRequestClose={handleCloseMessageModal}
+      >
+        <View className="flex-1 justify-center items-center bg-[#80808080] bg-opacity-50">
+          <View className="bg-white rounded-lg p-6 w-11/12">
+            <View className="flex-row justify-between items-center mb-4">
+              <Text className="text-lg font-pbold">Send Message</Text>
+              <TouchableOpacity onPress={handleCloseMessageModal}>
+                <Ionicons name="close-circle-outline" size={24} color="#333" />
+              </TouchableOpacity>
+            </View>
+            <Text className="font-semibold mb-2">Your Message:</Text>
+            <TextInput
+              className="bg-gray-200 rounded-xl py-2 px-4 mb-4 font-pregular"
+              placeholder="Enter your message"
+              value={message}
+              onChangeText={setMessage}
+              multiline
+            />
+            <TouchableOpacity
+              className="bg-orange-500 rounded-xl py-4 mb-4"
+              onPress={handleSubmitMessage}
+            >
+              <Text className="text-white text-center font-pbold">Send Message</Text>
             </TouchableOpacity>
           </View>
         </View>
