@@ -148,7 +148,7 @@ const Register = () => {
       });
       const { token } = response.data;
       await AsyncStorage.setItem('tutorToken', token);
-      router.push('/dashboard');
+      router.push('/tutor-login');
     } catch (error) {
       setError('Registration failed. Please try again.');
     } finally {

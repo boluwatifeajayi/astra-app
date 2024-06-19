@@ -81,7 +81,7 @@ const Register = () => {
       });
 
       await AsyncStorage.setItem('token', response.data.token);
-      router.push('/home');
+      router.push('/student-login');
     } catch (err) {
       setError('Registration failed');
     } finally {
