@@ -21,6 +21,8 @@ const TutorDetails = () => {
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
   const [newReview, setNewReview] = useState('');
   const [newRating, setNewRating] = useState(0);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
   const [messageModalVisible, setMessageModalVisible] = useState(false); // New state for message modal
   const [message, setMessage] = useState(''); // New state for message content
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -46,6 +48,21 @@ const TutorDetails = () => {
       setLoading(false);
     }
   };
+
+  const onDateChange = (event:any, selectedDate:any) => {
+    setShowDatePicker(false);
+    if (selectedDate) {
+      setSelectedDate(selectedDate);
+    }
+  };
+
+  const onTimeChange = (event:any, selectedTime:any) => {
+    setShowTimePicker(false);
+    if (selectedTime) {
+      setSelectedTime(selectedTime);
+    }
+  };
+
 
   const handleSubmitBooking = async () => {
     if (!selectedCourse) {
@@ -282,22 +299,37 @@ const TutorDetails = () => {
             </Picker>
 
             <Text className="font-semibold mb-2">Date:</Text>
+          <TouchableOpacity 
+            onPress={() => setShowDatePicker(true)}
+            className="bg-gray-200 rounded-xl py-2 px-4 mb-4"
+          >
+            <Text>{selectedDate?.toDateString()}</Text>
+          </TouchableOpacity>
+          {showDatePicker && (
             <DateTimePicker
               value={selectedDate}
               mode="date"
               display="default"
-              onChange={(event, selectedDate) => setSelectedDate(selectedDate || new Date())}
+              onChange={onDateChange}
             />
+          )}
 
-            <Text className="font-semibold mb-2 mt-4">Time:</Text>
+          <Text className="font-semibold mb-2">Time:</Text>
+          <TouchableOpacity 
+            onPress={() => setShowTimePicker(true)}
+            className="bg-gray-200 rounded-xl py-2 px-4 mb-4"
+          >
+            <Text>{selectedTime?.toLocaleTimeString()}</Text>
+          </TouchableOpacity>
+          {showTimePicker && (
             <DateTimePicker
               value={selectedTime}
               mode="time"
               is24Hour={true}
               display="default"
-              onChange={(event, selectedTime) => setSelectedTime(selectedTime || new Date())}
+              onChange={onTimeChange}
             />
-
+          )}
             <TouchableOpacity
               className="bg-orange-500 rounded-xl py-4 mt-6"
               onPress={handleSubmitBooking}

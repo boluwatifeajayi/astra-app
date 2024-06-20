@@ -154,12 +154,12 @@ const Register = () => {
         [
           {
             text: 'OK',
-            onPress: () => router.push('/login'),
+            onPress: () => router.push('/tutor-login'),
           },
         ]
       );
     } catch (error) {
-      setError('Registration failed. Please try again.');
+      setError('Registration failed. account already exists.');
     } finally {
       setLoading(false);
     }
@@ -289,7 +289,7 @@ const Register = () => {
         </TouchableOpacity>
       ))}
     </View>
-    <Text className="text-gray-600 font-pbold mb-2">Daily Available Time</Text>
+    <Text className="text-gray-600 font-pbold mb-2">Available Times(start and end time, respectively)</Text>
     <View className="flex-row justify-between">
       <TouchableOpacity
         className="flex-1 px-4 py-4 bg-white border border-gray-300 rounded-xl mr-2"

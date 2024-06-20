@@ -87,12 +87,12 @@ const Register = () => {
         [
           {
             text: 'OK',
-            onPress: () => router.push('/login'),
+            onPress: () => router.push('/student-login'),
           },
         ]
       );
     } catch (err) {
-      setError('Registration failed');
+      setError('Registration failed, account already exists');
     } finally {
       setLoading(false);
     }
@@ -201,7 +201,7 @@ const Register = () => {
               </View>
             </View>
             <View className="w-full">
-              <Text className="text-gray-600 font-pbold mb-2">Choose Skills To Learn</Text>
+              <Text className="text-gray-600 font-pbold mb-2">Choose Courses</Text>
               <View className="flex-row flex-wrap mb-4">
                 {courses.map((course:any) => (
                   <TouchableOpacity
