@@ -36,7 +36,8 @@ const Explore = () => {
       setTrendingSkills(skillsResponse.data);
     } catch (error) {
       console.error('Error fetching data:', error);
-      router.push('/');
+      await AsyncStorage.removeItem('userToken');
+      router.push('/student-login');
     } finally {
       setLoading(false);
       setRefreshing(false);

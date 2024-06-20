@@ -31,7 +31,8 @@ const Explore = () => {
       setUser(response.data);
     } catch (error) {
       console.error('Error fetching user data:', error);
-      router.push('/');
+      await AsyncStorage.removeItem('tutorToken');
+      router.push('/tutor-login');
     } finally {
       setLoading(false);
       setRefreshing(false);

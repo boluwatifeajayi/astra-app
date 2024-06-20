@@ -65,10 +65,10 @@ const Register = () => {
       setError('Passwords do not match');
       return;
     }
-
+  
     setLoading(true);
     setError('');
-
+  
     try {
       const response = await axios.post(`${server}/students/register`, {
         firstName,
@@ -79,9 +79,18 @@ const Register = () => {
         learningStyle: selectedLearningStyles,
         courses: selectedCourses,
       });
-
-      await AsyncStorage.setItem('token', response.data.token);
-      router.push('/home');
+  
+      await AsyncStorage.setItem('userToken', response.data.token);
+      Alert.alert(
+        'Registration Successful',
+        'Your account has been created successfully. Please log in to continue.',
+        [
+          {
+            text: 'OK',
+            onPress: () => router.push('/login'),
+          },
+        ]
+      );
     } catch (err) {
       setError('Registration failed');
     } finally {
@@ -161,7 +170,7 @@ const Register = () => {
               Learning Information
             </Text>
             <View className="w-full">
-              <Text className="text-gray-600 font-pbold mb-2">Discipline</Text>
+              <Text className="text-gray-600 font-pbold mb-2">Program</Text>
               <TextInput
                 className="px-4 py-4 bg-white border border-gray-300 rounded-xl mb-4"
                 placeholder="Discipline"

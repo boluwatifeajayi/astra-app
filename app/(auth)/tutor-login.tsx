@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, ActivityIndicator, Alert } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -12,6 +12,23 @@ const TutorLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+
+  useEffect(() => {
+    checkUserToken();
+  }, []);
+
+  const checkUserToken = async () => {
+    try {
+      const userToken = await AsyncStorage.getItem('tutorToken');
+      if (userToken) {
+        router.push('/dashboard');
+      }
+    } catch (err) {
+      console.log('Error checking user token:', err);
+    }
+  };
+
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);

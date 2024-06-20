@@ -131,7 +131,7 @@ const Register = () => {
       setError('Please fill all fields.');
       return;
     }
-
+  
     setLoading(true);
     setError('');
     try {
@@ -148,7 +148,16 @@ const Register = () => {
       });
       const { token } = response.data;
       await AsyncStorage.setItem('tutorToken', token);
-      router.push('/dashboard');
+      Alert.alert(
+        'Registration Successful',
+        'Your account has been created successfully. Please log in to continue.',
+        [
+          {
+            text: 'OK',
+            onPress: () => router.push('/login'),
+          },
+        ]
+      );
     } catch (error) {
       setError('Registration failed. Please try again.');
     } finally {
